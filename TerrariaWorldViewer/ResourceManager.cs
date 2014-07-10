@@ -10,17 +10,23 @@ namespace TerrariaWorldViewer
     {
         private static readonly Lazy<ResourceManager> UniqueInstance = new Lazy<ResourceManager>(() => new ResourceManager());
 
-        private Dictionary<TileType, Bitmap> symbolBitmaps;
+        private readonly IDictionary<TileType, Bitmap> _symbolBitmaps;
 
-        public static ResourceManager Instance { get { return UniqueInstance; } }
+        public static ResourceManager Instance
+        {
+            get
+            {
+                return UniqueInstance.Value;
+            }
+        }
 
         private ResourceManager()
         {
-            this.symbolBitmaps = new Dictionary<TileType, Bitmap>();            
+            _symbolBitmaps = new Dictionary<TileType, Bitmap>();
         }
-
+        
         /// <summary>
-        /// Initialize the resource directory
+        /// Initialize the resources and the resource directories
         /// </summary>
         public void Initialize()
         {
@@ -49,18 +55,27 @@ namespace TerrariaWorldViewer
             LoadSymbols();
         }
 
+        public Bitmap GetSymbol(TileType symbolType)
+        {
+            if (!_symbolBitmaps.ContainsKey(symbolType))
+            {
+                throw new ApplicationException(string.Format("Tile Type {0} Does not have an associated Symbol", symbolType));
+            }
+            return _symbolBitmaps[symbolType];
+        }
 
         /// <summary>
         /// Copy the symbols externally to the resource directory
         /// </summary>
-        public void ValidateSymbolResources()
+        private void ValidateSymbolResources()
         {
-            Type resourceType = Util.GetResourceAssemblyType();
-
-            foreach (string symbolName in Constants.ExternalSymbolNames)
+            foreach (var symbolName in Constants.ExternalSymbolNames)
             {
                 // if it doesnt exist recopy
-                if(!File.Exists(Path.Combine(Constants.ApplicationResourceDirectory, string.Format("{0}.png", symbolName))))
+                var symbolPath = Path.Combine(Constants.ApplicationResourceDirectory,
+                    string.Format("{0}.png", symbolName));
+ 
+                if(!File.Exists(symbolPath))
                 {
                     var b = (Bitmap)Properties.Resources.ResourceManager.GetObject(symbolName);
                     SaveSymbolToResourceDirectory(b, symbolName);
@@ -71,53 +86,21 @@ namespace TerrariaWorldViewer
         /// <summary>
         /// Loads Symbols, filter which ones are actually enabled
         /// </summary>
-        public void LoadSymbols()
+        private void LoadSymbols()
         {
-            //// Property file doesnt exist so recreate/reload
-            //if(!File.Exists(Constants.ApplicationSymbolPropertiesFile))
-            //{
-            //    foreach (string symbolName in Constants.ExternalSymbolNames)
-            //    {
-            //        this.symbolProperties.Add((TileType)Enum.Parse(typeof(TileType), symbolName), new SymbolProperties(symbolName, true, GetSymbolPath(symbolName)));
-            //    }
-
-            //    // Serialize to File
-            //    XmlSerializer outputSerializer = new XmlSerializer(this.symbolProperties.GetType());
-            //    StringBuilder sb = new StringBuilder();
-            //    StringWriter writer = new StringWriter(sb);
-            //    outputSerializer.Serialize(writer, this.symbolProperties);
-            //    XmlDocument xmlDocument = new XmlDocument();
-            //    xmlDocument.LoadXml(sb.ToString());
-            //    xmlDocument.Save(Constants.ApplicationSymbolPropertiesFile);
-            //}
-            //XmlDocument xmlDoc = new XmlDocument();
-            //xmlDoc.LoadXml(File.ReadAllText(Constants.ApplicationSymbolPropertiesFile));
-            //XmlNodeReader reader = new XmlNodeReader(xmlDoc.DocumentElement);
-            //XmlSerializer inputSerializer = new XmlSerializer(this.symbolProperties.GetType());
-            //this.symbolProperties = (SerializableDictionary<TileType, SymbolProperties>)inputSerializer.Deserialize(reader);
-
-            foreach (string symbolName in Constants.ExternalSymbolNames)
+            foreach (var symbolName in Constants.ExternalSymbolNames)
             {
-                string symbolPath = GetSymbolPath(symbolName);
-                this.symbolBitmaps.Add((TileType)Enum.Parse(typeof(TileType), symbolName), new Bitmap(symbolPath));
+                var symbolPath = GetSymbolPath(symbolName);
+                _symbolBitmaps.Add((TileType)Enum.Parse(typeof(TileType), symbolName), new Bitmap(symbolPath));
             }
         }
 
-        public Bitmap GetSymbol(TileType symbolType)
-        {
-            if (!this.symbolBitmaps.ContainsKey(symbolType))
-            {
-                throw new ApplicationException(string.Format("Tile Type {0} Does not have an associated Symbol", symbolType));
-            }
-            return this.symbolBitmaps[symbolType];
-        }
-
-        public static string GetSymbolPath(string symbolName)
+        private static string GetSymbolPath(string symbolName)
         {
             return Path.Combine(Constants.ApplicationResourceDirectory, string.Format("{0}.png", symbolName));
         }
 
-        public static void SaveSymbolToResourceDirectory(Bitmap symbol, string name)
+        private static void SaveSymbolToResourceDirectory(Bitmap symbol, string name)
         {
             symbol.Save(Path.Combine(Constants.ApplicationResourceDirectory, string.Format("{0}.png", name)), ImageFormat.Png);
         }

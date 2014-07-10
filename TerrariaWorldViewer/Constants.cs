@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 
 namespace TerrariaWorldViewer
 {
-    public class Constants
+    public static class Constants
     {
         /// <summary>
         /// List of Credits
@@ -35,20 +32,20 @@ All Other Goons";
         /// <summary>
         /// Points to the root directory for terraria world viewer
         /// </summary>
-        public static string ApplicationRootDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TerrariaWorldViewer");
+        public static readonly string ApplicationRootDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TerrariaWorldViewer");
 
         /// <summary>
         /// Points to the application log directory
         /// </summary>
-        public static string ApplicationLogDirectory = System.IO.Path.Combine(ApplicationRootDirectory, "Logs");
-        public static string ApplicationResourceDirectory = System.IO.Path.Combine(ApplicationRootDirectory, "Resources");
+        public static readonly string ApplicationLogDirectory = System.IO.Path.Combine(ApplicationRootDirectory, "Logs");
+        public static readonly string ApplicationResourceDirectory = System.IO.Path.Combine(ApplicationRootDirectory, "Resources");
 
-        public static string ApplicationUserSettingsFile = System.IO.Path.Combine(ApplicationRootDirectory, "UserSettings.xml");
+        public static readonly string ApplicationUserSettingsFile = System.IO.Path.Combine(ApplicationRootDirectory, "UserSettings.xml");
 
 
-        public static string[] ExternalSymbolNames = { "Altar", "Chest", "Heart", "ShadowOrb", "Amethyst", "Diamond", "Emerald", "Ruby", "Sapphire", "Topaz", "Spawn" };
+        public static readonly string[] ExternalSymbolNames = { "Altar", "Chest", "Heart", "ShadowOrb", "Amethyst", "Diamond", "Emerald", "Ruby", "Sapphire", "Topaz", "Spawn" };
 
-        public static string[] ChestFilterWeapons = {
+        public static readonly string[] ChestFilterWeapons = {
                                                         "Muramasa",
                                                         "Aqua Scepter",
                                                         "Blue Moon",
@@ -74,7 +71,7 @@ All Other Goons";
                                                         "Magic Missile",
                                                   };
 
-        public static string[] ChestFilterAccessories = {
+        public static readonly string[] ChestFilterAccessories = {
                                                         "Cobalt Shield",
                                                         "Band of Regeneration",
                                                         "Angel Statue",
@@ -96,8 +93,10 @@ All Other Goons";
                                                         "Orb of Light",
                                                         };
 
-        // COLOR CONSTANTS
-
+        
+        /// <summary>
+        /// Colour Constants
+        /// </summary>
         public static class Colors
         {
             public static Color DIRT = Color.FromArgb(175, 131, 101);

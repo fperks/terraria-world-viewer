@@ -1,70 +1,78 @@
 ﻿using System.Drawing;
 using System.IO;
-namespace WorldView
+namespace TerrariaWorldViewer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Drawing.Imaging;  
-
     public class WorldReader
     {
-        private long tileOffset;
-        private long chestOffset;
+        private readonly string _worldFilePath;
+        private FileStream _worldStream;
+        private BinaryReader _reader;
+        
+        private long TileOffset { get; set; }
+        private long ChestOffset { get; set; }
 
-        private string filePath;
-        private FileStream stream;
-        private BinaryReader reader;
+        private BinaryReader Reader
+        {
+            get
+            {
+                return _reader ?? (_reader = new BinaryReader(WorldStream));
+            }
+        }
 
+        private FileStream WorldStream
+        {
+            get
+            {
+                return _worldStream ?? (_worldStream = new FileStream(_worldFilePath, FileMode.Open));
+            }
+        }
+        
         public WorldReader(string filePath)
         {
-            this.filePath = filePath;
-            this.stream = new FileStream(this.filePath, FileMode.Open);
-            this.reader = new BinaryReader(stream);
-            tileOffset = 0;
-            chestOffset = 0;
+            _worldFilePath = filePath;
+            TileOffset = 0L;
+            ChestOffset = 0L;
         }
 
         public void SeekToTiles()
         {
-            this.stream.Seek(this.tileOffset, SeekOrigin.Begin);
+            WorldStream.Seek(TileOffset, SeekOrigin.Begin);
         }
 
         public WorldHeader ReadHeader()
         {
             // Reset to origin
-            stream.Seek(0, SeekOrigin.Begin);
+            WorldStream.Seek(0, SeekOrigin.Begin);
 
-            int releaseNumber = this.reader.ReadInt32();
+            var releaseNumber = _reader.ReadInt32();
             WorldHeader header;
             if (releaseNumber == 38)
             {
                 header = new WorldHeader
                 {
                     ReleaseNumber = releaseNumber,
-                    Name = this.reader.ReadString(),
+                    Name = Reader.ReadString(),
          //           Id = this.reader.ReadInt32(),
-                    WorldCoords = new Rect(this.reader.ReadInt32(), this.reader.ReadInt32(), this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    MaxTiles = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    SpawnPoint = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    SurfaceLevel = this.reader.ReadDouble(),
-                    RockLayer = this.reader.ReadDouble(),
-                    TemporaryTime = this.reader.ReadDouble(),
-                    IsDayTime = this.reader.ReadBoolean(),
-                    MoonPhase = this.reader.ReadInt32(),
-                    IsBloodMoon = this.reader.ReadBoolean(),
-                    DungeonPoint = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    IsBoss1Dead = this.reader.ReadBoolean(),
-                    IsBoss2Dead = this.reader.ReadBoolean(),
-                    IsBoss3Dead = this.reader.ReadBoolean(),
-                    IsShadowOrbSmashed = this.reader.ReadBoolean(),
-                    IsMeteorSpawned = this.reader.ReadBoolean(),
-                    ShadowOrbsSmashed = this.reader.ReadByte(),
-                    InvasionDelay = this.reader.ReadInt32(),
-                    InvasionSize = this.reader.ReadInt32(),
-                    InvasionType = this.reader.ReadInt32(),
-                    InvasionPointX = this.reader.ReadDouble(),
+                    WorldCoords = new Rect(Reader.ReadInt32(), Reader.ReadInt32(), Reader.ReadInt32(), Reader.ReadInt32()),
+                    MaxTiles = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    SpawnPoint = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    SurfaceLevel = Reader.ReadDouble(),
+                    RockLayer = Reader.ReadDouble(),
+                    TemporaryTime = Reader.ReadDouble(),
+                    IsDayTime = Reader.ReadBoolean(),
+                    MoonPhase = Reader.ReadInt32(),
+                    IsBloodMoon = Reader.ReadBoolean(),
+                    DungeonPoint = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    IsBoss1Dead = Reader.ReadBoolean(),
+                    IsBoss2Dead = Reader.ReadBoolean(),
+                    IsBoss3Dead = Reader.ReadBoolean(),
+                    IsShadowOrbSmashed = Reader.ReadBoolean(),
+                    IsMeteorSpawned = Reader.ReadBoolean(),
+                    ShadowOrbsSmashed = Reader.ReadByte(),
+                    InvasionDelay = Reader.ReadInt32(),
+                    InvasionSize = Reader.ReadInt32(),
+                    InvasionType = Reader.ReadInt32(),
+                    InvasionPointX = Reader.ReadDouble(),
                 };
             }
             else
@@ -72,48 +80,49 @@ namespace WorldView
                 header = new WorldHeader
                 {
                     ReleaseNumber = releaseNumber,
-                    Name = this.reader.ReadString(),
-                    Id = this.reader.ReadInt32(),
-                    WorldCoords = new Rect(this.reader.ReadInt32(), this.reader.ReadInt32(), this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    MaxTiles = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    SpawnPoint = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    SurfaceLevel = this.reader.ReadDouble(),
-                    RockLayer = this.reader.ReadDouble(),
-                    TemporaryTime = this.reader.ReadDouble(),
-                    IsDayTime = this.reader.ReadBoolean(),
-                    MoonPhase = this.reader.ReadInt32(),
-                    IsBloodMoon = this.reader.ReadBoolean(),
-                    DungeonPoint = new Point(this.reader.ReadInt32(), this.reader.ReadInt32()),
-                    IsBoss1Dead = this.reader.ReadBoolean(),
-                    IsBoss2Dead = this.reader.ReadBoolean(),
-                    IsBoss3Dead = this.reader.ReadBoolean(),
-                    IsShadowOrbSmashed = this.reader.ReadBoolean(),
-                    IsMeteorSpawned = this.reader.ReadBoolean(),
-                    ShadowOrbsSmashed = this.reader.ReadByte(),
-                    InvasionDelay = this.reader.ReadInt32(),
-                    InvasionSize = this.reader.ReadInt32(),
-                    InvasionType = this.reader.ReadInt32(),
-                    InvasionPointX = this.reader.ReadDouble(),
+                    Name = Reader.ReadString(),
+                    Id = Reader.ReadInt32(),
+                    WorldCoords = new Rect(Reader.ReadInt32(), Reader.ReadInt32(), Reader.ReadInt32(), Reader.ReadInt32()),
+                    MaxTiles = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    SpawnPoint = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    SurfaceLevel = Reader.ReadDouble(),
+                    RockLayer = Reader.ReadDouble(),
+                    TemporaryTime = Reader.ReadDouble(),
+                    IsDayTime = Reader.ReadBoolean(),
+                    MoonPhase = Reader.ReadInt32(),
+                    IsBloodMoon = Reader.ReadBoolean(),
+                    DungeonPoint = new Point(Reader.ReadInt32(), Reader.ReadInt32()),
+                    IsBoss1Dead = Reader.ReadBoolean(),
+                    IsBoss2Dead = Reader.ReadBoolean(),
+                    IsBoss3Dead = Reader.ReadBoolean(),
+                    IsShadowOrbSmashed = Reader.ReadBoolean(),
+                    IsMeteorSpawned = Reader.ReadBoolean(),
+                    ShadowOrbsSmashed = Reader.ReadByte(),
+                    InvasionDelay = Reader.ReadInt32(),
+                    InvasionSize = Reader.ReadInt32(),
+                    InvasionType = Reader.ReadInt32(),
+                    InvasionPointX = Reader.ReadDouble(),
                 };
 
             }
 
-            this.tileOffset = stream.Position;
+            TileOffset = WorldStream.Position;
             return header;
         }
 
         public TileType GetNextTile()
         {
-            bool isTileActive = reader.ReadBoolean();
-            TileType tileType = TileType.Unknown;
+            var isTileActive = Reader.ReadBoolean();
+            var tileType = TileType.Unknown;
             byte blockType = 0x00;
             if (isTileActive)
             {
-                blockType = reader.ReadByte();
+                blockType = Reader.ReadByte();
                 if (WorldMapper.tileTypeDefs[blockType].IsImportant)
                 {
-                    reader.ReadInt16();
-                    reader.ReadInt16();
+                    // skip this blocks
+                    Reader.ReadInt16();
+                    Reader.ReadInt16();
                 }
                 tileType = WorldMapper.tileTypeDefs[blockType].TileType;
             }
@@ -121,11 +130,11 @@ namespace WorldView
             {
                 tileType = TileType.Sky;
             }
-            bool isLighted = reader.ReadBoolean();
-            bool isWall = reader.ReadBoolean();
+            var isLighted = Reader.ReadBoolean();
+            var isWall = Reader.ReadBoolean();
             if (isWall)
             {
-                byte wallType = reader.ReadByte();
+                byte wallType = Reader.ReadByte();
                 if (tileType == TileType.Unknown || tileType == TileType.Sky)
                 {
                     if (!WorldMapper.tileTypeDefs.ContainsKey((int)wallType + Constants.WallOffset))
@@ -139,11 +148,11 @@ namespace WorldView
                     
                 }
             }
-            bool isLiquid = reader.ReadBoolean();
+            var isLiquid = Reader.ReadBoolean();
             if (isLiquid)
             {
-                byte liquidLevel = reader.ReadByte();
-                bool isLava = reader.ReadBoolean();
+                var liquidLevel = Reader.ReadByte();
+                var isLava = Reader.ReadBoolean();
                 if (isWall || tileType == TileType.Sky)
                 {
                     tileType = isLava ? TileType.Lava : TileType.Water;
@@ -159,20 +168,20 @@ namespace WorldView
         /// <returns></returns>
         public Chest GetNextChest(int chestId)
         {
-            bool isChest = reader.ReadBoolean();
+            var isChest = Reader.ReadBoolean();
             if (!isChest)
             {
                 return null;
             }
-            Chest chest = new Chest(chestId, new Point(this.reader.ReadInt32(), this.reader.ReadInt32()));
+            var chest = new Chest(chestId, new Point(Reader.ReadInt32(), Reader.ReadInt32()));
 
             // Iterate through items contained within chest
-            for (int i = 0; i < Constants.ChestMaxItems; i++)
+            for (var i = 0; i < Constants.ChestMaxItems; i++)
             {
-                byte count = this.reader.ReadByte();
-                if ((int)count > 0)
+                var count = Reader.ReadByte();
+                if (count > 0)
                 {
-                    chest.AddItem(new Item(reader.ReadString(), (int)count));
+                    chest.AddItem(new Item(Reader.ReadString(), count));
                 }
             }
             return chest;
@@ -180,7 +189,7 @@ namespace WorldView
 
         public void Close()
         {
-            this.reader.Close();
+            Reader.Close();
         }
   
         //public void CreatePreviewImage(string outputFilePath)

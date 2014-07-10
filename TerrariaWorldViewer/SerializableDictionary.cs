@@ -1,71 +1,75 @@
 ﻿// Credit to http://weblogs.asp.net/pwelter34/archive/2006/05/03/444961.aspx
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
-[XmlRoot("dictionary")]
-public class SerializableDictionary<TKey, TValue>
-    : Dictionary<TKey, TValue>, IXmlSerializable
+namespace TerrariaWorldViewer
 {
-    #region IXmlSerializable Members
-    public System.Xml.Schema.XmlSchema GetSchema()
+    [XmlRoot("dictionary")]
+    public class SerializableDictionary<TKey, TValue>
+        : Dictionary<TKey, TValue>, IXmlSerializable
     {
-        return null;
-    }
-
-    public void ReadXml(System.Xml.XmlReader reader)
-    {
-        XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-        XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
-
-        bool wasEmpty = reader.IsEmptyElement;
-        reader.Read();
-
-        if (wasEmpty)
-            return;
-
-        while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+        #region IXmlSerializable Members
+        public XmlSchema GetSchema()
         {
-            reader.ReadStartElement("item");
-
-            reader.ReadStartElement("key");
-            TKey key = (TKey)keySerializer.Deserialize(reader);
-            reader.ReadEndElement();
-
-            reader.ReadStartElement("value");
-            TValue value = (TValue)valueSerializer.Deserialize(reader);
-            reader.ReadEndElement();
-
-            this.Add(key, value);
-
-            reader.ReadEndElement();
-            reader.MoveToContent();
+            return null;
         }
-        reader.ReadEndElement();
-    }
 
-    public void WriteXml(System.Xml.XmlWriter writer)
-    {
-        XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-        XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
-
-        foreach (TKey key in this.Keys)
+        public void ReadXml(XmlReader reader)
         {
-            writer.WriteStartElement("item");
+            var keySerializer = new XmlSerializer(typeof(TKey));
+            var valueSerializer = new XmlSerializer(typeof(TValue));
 
-            writer.WriteStartElement("key");
-            keySerializer.Serialize(writer, key);
-            writer.WriteEndElement();
+            var wasEmpty = reader.IsEmptyElement;
+            reader.Read();
 
-            writer.WriteStartElement("value");
-            TValue value = this[key];
-            valueSerializer.Serialize(writer, value);
-            writer.WriteEndElement();
+            if (wasEmpty)
+                return;
 
-            writer.WriteEndElement();
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("item");
+
+                reader.ReadStartElement("key");
+                var key = (TKey)keySerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                reader.ReadStartElement("value");
+                var value = (TValue)valueSerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                Add(key, value);
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
         }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            var keySerializer = new XmlSerializer(typeof(TKey));
+            var valueSerializer = new XmlSerializer(typeof(TValue));
+
+            foreach (var key in Keys)
+            {
+                writer.WriteStartElement("item");
+
+                writer.WriteStartElement("key");
+                keySerializer.Serialize(writer, key);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("value");
+                TValue value = this[key];
+                valueSerializer.Serialize(writer, value);
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+            }
+        }
+        #endregion
     }
-    #endregion
 }
+

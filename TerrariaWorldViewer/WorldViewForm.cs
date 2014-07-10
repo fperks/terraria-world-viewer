@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.IO;
 
-namespace WorldView
+namespace TerrariaWorldViewer
 {
     public partial class WorldViewForm : Form
     {

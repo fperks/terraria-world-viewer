@@ -1,4 +1,4 @@
-﻿namespace WorldView
+﻿namespace TerrariaWorldViewer
 {
     partial class WorldViewForm
     {

@@ -1,10 +1,5 @@
 ﻿namespace TerrariaWorldViewer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// Basic Item Representation
     /// </summary>
@@ -13,12 +8,22 @@
         /// <summary>
         /// The name of the item
         /// </summary>
-        private string name;
+        private readonly string _name;
 
         /// <summary>
         /// The count of the items
         /// </summary>
-        private int count;
+        private readonly int _count;
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public int Count
+        {
+            get { return _count; }
+        }
 
         /// <summary>
         /// Constructor
@@ -27,41 +32,19 @@
         /// <param name="count">number of the items</param>
         public Item(string name, int count)
         {
-            this.name = name;
-            this.count = count;
-        }
-
-        /// <summary>
-        /// Property returns name of item
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-        }
-
-        /// <summary>
-        /// Property returns number of items currently stacked
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return this.count;
-            }
+            _name = name;
+            _count = count;
         }
 
         public override string ToString()
         {
-            if(count == 1)
+            if(Count == 1)
             {
-                return this.name;
+                return Name;
             }
             else
             {
-                return string.Format("{0}, Count: {1}", this.name, this.count);
+                return string.Format("{0}, Count: {1}", Name, Count);
             }
             
         }
