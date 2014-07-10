@@ -63,9 +63,9 @@ namespace TerrariaWorldViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap altar1 {
+        internal static System.Drawing.Bitmap Altar {
             get {
-                object obj = ResourceManager.GetObject("altar1", resourceCulture);
+                object obj = ResourceManager.GetObject("Altar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace TerrariaWorldViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap chest1 {
+        internal static System.Drawing.Bitmap Chest {
             get {
-                object obj = ResourceManager.GetObject("chest1", resourceCulture);
+                object obj = ResourceManager.GetObject("Chest", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace TerrariaWorldViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap heart1 {
+        internal static System.Drawing.Bitmap Heart {
             get {
-                object obj = ResourceManager.GetObject("heart1", resourceCulture);
+                object obj = ResourceManager.GetObject("Heart", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +153,9 @@ namespace TerrariaWorldViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap spawn1 {
+        internal static System.Drawing.Bitmap Spawn {
             get {
-                object obj = ResourceManager.GetObject("spawn1", resourceCulture);
+                object obj = ResourceManager.GetObject("Spawn", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
