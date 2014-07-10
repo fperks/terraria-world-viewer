@@ -1,16 +1,15 @@
-﻿namespace TerrariaWorldViewer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
+namespace TerrariaWorldViewer
+{
     public class WorldMapper
     {
-        // It should be Tiletype enum but my hand hurts too much to fix.
         public static Dictionary<int, TileProperties> tileTypeDefs;
 
         private List<Chest> chests;
@@ -128,7 +127,7 @@
             tileTypeDefs[79] = new TileProperties(TileType.Bed, true, Constants.Colors.DECORATIVE);
             tileTypeDefs[80] = new TileProperties(TileType.Unknown, false, Constants.Colors.UNKNOWN);
 
-            for(int i = 80; i < 255; i++)
+            for(var i = 80; i < 255; i++)
             {
                 tileTypeDefs[i] = new TileProperties(TileType.Unknown, false, Color.Magenta);
             }
@@ -215,7 +214,7 @@
                     }
 
                     // Else Set Pixel Value
-                    bitmap.SetPixel(col, row, tileTypeDefs[(int)tileType].Colour);
+                    bitmap.SetPixel(col, row, tileTypeDefs[(int)tileType].TileColor);
                 }
             }
 

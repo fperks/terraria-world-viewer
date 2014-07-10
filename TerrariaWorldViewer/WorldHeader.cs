@@ -1,49 +1,51 @@
-﻿namespace TerrariaWorldViewer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text;
+﻿using System.ComponentModel;
+using System.Drawing;
 
+namespace TerrariaWorldViewer
+{
+
+    /// <summary>
+    /// File format terraria uses for the header of World Files
+    /// </summary>
     public struct WorldHeader
     {
-        private int releaseNumber;
-        private string name;
-        private int id;
-        private Rect worldCoords;
-        private Point maxTiles;
-        private Point spawnPoint;
-        private double surfaceLevel;
-        private double rockLayer;
-        private double temporaryTime;
-        private bool isDayTime;
-        private int moonPhase;
-        private bool isBloodMoon;
-        private Point dungeonPoint;
-        private bool isBoss1Dead;
-        private bool isBoss2Dead;
-        private bool isBoss3Dead;
-        private bool isShadowOrbSmashed;
-        private bool isMeteorSpawned;
-        private byte shadowOrbsSmashed;
-        private int invasionDelay;
-        private int invasionSize;
-        private int invasionType;
-        private double invasionPointX;
+        private int _releaseNumber;
+        private string _name;
+        private int _id;
+        private Rect _worldCoords;
+        private Point _maxTiles;
+        private Point _spawnPoint;
+        private double _surfaceLevel;
+        private double _rockLayer;
+        private double _temporaryTime;
+        private bool _isDayTime;
+        private int _moonPhase;
+        private bool _isBloodMoon;
+        private Point _dungeonPoint;
+        private bool _isBoss1Dead;
+        private bool _isBoss2Dead;
+        private bool _isBoss3Dead;
+        private bool _isShadowOrbSmashed;
+        private bool _isMeteorSpawned;
+        private byte _shadowOrbsSmashed;
+        private int _invasionDelay;
+        private int _invasionSize;
+        private int _invasionType;
+        private double _invasionPointX;
+
+        // NOTE: Properties are not automatic due to this implies structs are mutable which makes the serialization akward.
 
         [Category("General"), ReadOnly(true)]
+// ReSharper disable ConvertToAutoProperty
         public int ReleaseNumber
         {
             get
             {
-                return this.releaseNumber;
+                return _releaseNumber;
             }
             set
             {
-                this.releaseNumber = value;
+                _releaseNumber = value;
             }
         }
 
@@ -52,11 +54,11 @@
         {
             get
             {
-                return this.name;
+                return _name;
             }
             set
             {
-                this.name = value;
+                _name = value;
             }
         }
 
@@ -65,11 +67,11 @@
         {
             get
             {
-                return this.id;
+                return _id;
             }
             set
             {
-                this.id = value;
+                _id = value;
             }
         }
 
@@ -78,11 +80,11 @@
         {
             get
             {
-                return this.worldCoords;
+                return _worldCoords;
             }
             set
             {
-                this.worldCoords = value;
+                _worldCoords = value;
             }
         }
 
@@ -91,11 +93,11 @@
         {
             get
             {
-                return this.maxTiles;
+                return _maxTiles;
             }
             set
             {
-                this.maxTiles = value;
+                _maxTiles = value;
             }
         }
 
@@ -104,11 +106,11 @@
         {
             get
             {
-                return this.spawnPoint;
+                return _spawnPoint;
             }
             set
             {
-                this.spawnPoint = value;
+                _spawnPoint = value;
             }
         }
 
@@ -117,11 +119,11 @@
         {
             get
             {
-                return this.surfaceLevel;
+                return _surfaceLevel;
             }
             set
             {
-                this.surfaceLevel = value;
+                _surfaceLevel = value;
             }
         }
 
@@ -130,11 +132,11 @@
         {
             get
             {
-                return this.rockLayer;
+                return _rockLayer;
             }
             set
             {
-                this.rockLayer = value;
+                _rockLayer = value;
             }
         }
 
@@ -143,11 +145,11 @@
         {
             get
             {
-                return this.temporaryTime;
+                return _temporaryTime;
             }
             set
             {
-                this.temporaryTime = value;
+                _temporaryTime = value;
             }
         }
 
@@ -156,11 +158,11 @@
         {
             get
             {
-                return this.isDayTime;
+                return _isDayTime;
             }
             set
             {
-                this.isDayTime = value;
+                _isDayTime = value;
             }
         }
 
@@ -169,11 +171,11 @@
         {
             get
             {
-                return this.moonPhase;
+                return _moonPhase;
             }
             set
             {
-                this.moonPhase = value;
+                _moonPhase = value;
             }
         }
 
@@ -182,11 +184,11 @@
         {
             get
             {
-                return this.isBloodMoon;
+                return _isBloodMoon;
             }
             set
             {
-                this.isBloodMoon = value;
+                _isBloodMoon = value;
             }
         }
 
@@ -195,11 +197,11 @@
         {
             get
             {
-                return this.dungeonPoint;
+                return _dungeonPoint;
             }
             set
             {
-                this.dungeonPoint = value;
+                _dungeonPoint = value;
             }
         }
 
@@ -208,11 +210,11 @@
         {
             get
             {
-                return this.isBoss1Dead;
+                return _isBoss1Dead;
             }
             set
             {
-                this.isBoss1Dead = value;
+                _isBoss1Dead = value;
             }
         }
 
@@ -221,11 +223,11 @@
         {
             get
             {
-                return this.isBoss2Dead;
+                return _isBoss2Dead;
             }
             set
             {
-                this.isBoss2Dead = value;
+                _isBoss2Dead = value;
             }
         }
 
@@ -234,11 +236,11 @@
         {
             get
             {
-                return this.isBoss3Dead;
+                return _isBoss3Dead;
             }
             set
             {
-                this.isBoss3Dead = value;
+                _isBoss3Dead = value;
             }
         }
 
@@ -247,11 +249,11 @@
         {
             get
             {
-                return this.isShadowOrbSmashed;
+                return _isShadowOrbSmashed;
             }
             set
             {
-                this.isShadowOrbSmashed = value;
+                _isShadowOrbSmashed = value;
             }
         }
 
@@ -260,11 +262,11 @@
         {
             get
             {
-                return this.isMeteorSpawned;
+                return _isMeteorSpawned;
             }
             set
             {
-                this.isMeteorSpawned = value;
+                _isMeteorSpawned = value;
             }
         }
 
@@ -273,11 +275,11 @@
         {
             get
             {
-                return this.shadowOrbsSmashed;
+                return _shadowOrbsSmashed;
             }
             set
             {
-                this.shadowOrbsSmashed = value;
+                _shadowOrbsSmashed = value;
             }
         }
 
@@ -286,11 +288,11 @@
         {
             get
             {
-                return this.invasionDelay;
+                return _invasionDelay;
             }
             set
             {
-                this.invasionDelay = value;
+                _invasionDelay = value;
             }
         }
 
@@ -299,11 +301,11 @@
         {
             get
             {
-                return this.invasionSize;
+                return _invasionSize;
             }
             set
             {
-                this.invasionSize = value;
+                _invasionSize = value;
             }
         }
 
@@ -312,11 +314,11 @@
         {
             get
             {
-                return this.invasionType;
+                return _invasionType;
             }
             set
             {
-                this.invasionType = value;
+                _invasionType = value;
             }
         }
 
@@ -325,13 +327,14 @@
         {
             get
             {
-                return this.invasionPointX;
+                return _invasionPointX;
             }
             set
             {
-                this.invasionPointX = value;
+                _invasionPointX = value;
             }
 
         }
+        // ReSharper restore ConvertToAutoProperty
     }
 }

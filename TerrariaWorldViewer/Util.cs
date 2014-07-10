@@ -1,11 +1,8 @@
-﻿namespace TerrariaWorldViewer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
+﻿using System;
+using System.Reflection;
 
+namespace TerrariaWorldViewer
+{
     public static class Util
     {
         public static Type GetResourceAssemblyType()

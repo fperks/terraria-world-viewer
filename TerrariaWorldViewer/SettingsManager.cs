@@ -10,77 +10,60 @@ namespace TerrariaWorldViewer
 {
     public sealed class SettingsManager
     {
-        [Serializable]
-        public class UserSettings
-        {
-            public string InputWorldDirectory;
-            public string OutputPreviewDirectory;
-            public bool IsChestFilterEnabled;
-            public bool IsWallsDrawable;
-            public bool IsSymbolsDrawable;
-            public SerializableDictionary<string, bool> SymbolStates;
-            public SerializableDictionary<string, bool> ChestFilterWeaponStates;
-            public SerializableDictionary<string, bool> ChestFilterAccessoryStates;
-        }
-
-        private static SettingsManager instance = null;
-        private static readonly object mutex = new object();
-        private UserSettings settings;
-
-        private SettingsManager()
-        {
-            this.settings = new UserSettings();
-            this.settings.IsChestFilterEnabled = false;
-            this.settings.SymbolStates = new SerializableDictionary<string, bool>();
-            foreach (string s in Constants.ExternalSymbolNames)
-            {
-                this.settings.SymbolStates.Add(s, true);
-            }
-
-            this.settings.ChestFilterWeaponStates = new SerializableDictionary<string, bool>();
-            foreach (string s in Constants.ChestFilterWeapons)
-            {
-                this.settings.ChestFilterWeaponStates.Add(s, false);
-            }
-
-            this.settings.ChestFilterAccessoryStates = new SerializableDictionary<string, bool>();
-            foreach (string s in Constants.ChestFilterAccessories)
-            {
-                this.settings.ChestFilterAccessoryStates.Add(s, false);
-            }
-            this.settings.IsWallsDrawable = true;
-            this.settings.IsSymbolsDrawable = true;
-            this.settings.InputWorldDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games\\Terraria\\Worlds");
-            if (!Directory.Exists(this.settings.InputWorldDirectory))
-            {
-                this.settings.InputWorldDirectory = string.Empty;
-            }
-        }
+        private static readonly Lazy<SettingsManager> UniqueInstance = new Lazy<SettingsManager>(() => new SettingsManager());
 
         public static SettingsManager Instance
         {
-            get
+            get { return UniqueInstance.Value; }
+        }
+
+        public UserSettings Settings { get; set; }
+        
+        private SettingsManager()
+        {
+            Settings = new UserSettings()
             {
-                lock (mutex)
-                {
-                    if (instance == null)
-                    {
-                        instance = new SettingsManager();
-                    }
-                    return instance;   
-                }
+                IsChestFilterEnabled = false,
+                SymbolStates = new SerializableDictionary<string, bool>(),       
+                ChestFilterWeaponStates = new SerializableDictionary<string, bool>(),
+                ChestFilterAccessoryStates = new SerializableDictionary<string, bool>(),
+                IsWallsDrawable = true,
+                IsSymbolsDrawable = true,
+                InputWorldDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games\\Terraria\\Worlds")
+            };
+
+            foreach (var s in Constants.ExternalSymbolNames)
+            {
+                Settings.SymbolStates.Add(s, true);
+            }
+
+            foreach (var s in Constants.ChestFilterWeapons)
+            {
+                Settings.ChestFilterWeaponStates.Add(s, false);
+            }
+
+            foreach (var s in Constants.ChestFilterAccessories)
+            {
+                Settings.ChestFilterAccessoryStates.Add(s, false);
+            }
+
+            if (!Directory.Exists(Settings.InputWorldDirectory))
+            {
+                Settings.InputWorldDirectory = string.Empty;
             }
         }
+
+
 
         public string InputWorldDirectory
         {
             get
             {
-                return this.settings.InputWorldDirectory;
+                return Settings.InputWorldDirectory;
             }
             set
             {
-                this.settings.InputWorldDirectory = value;
+                Settings.InputWorldDirectory = value;
             }
         }
 
@@ -88,11 +71,11 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.OutputPreviewDirectory;
+                return Settings.OutputPreviewDirectory;
             }
             set
             {
-                this.settings.OutputPreviewDirectory = value;
+                Settings.OutputPreviewDirectory = value;
             }
         }
 
@@ -100,7 +83,7 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.SymbolStates;
+                return Settings.SymbolStates;
             }
         }
 
@@ -108,11 +91,11 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.IsSymbolsDrawable;
+                return Settings.IsSymbolsDrawable;
             }
             set
             {
-                this.settings.IsSymbolsDrawable = value;
+                Settings.IsSymbolsDrawable = value;
             }
         }
 
@@ -120,40 +103,40 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.IsWallsDrawable;
+                return Settings.IsWallsDrawable;
             }
             set
             {
-                this.settings.IsWallsDrawable = value;
+                Settings.IsWallsDrawable = value;
             }
         }
 
         public bool IsSymbolViewable(TileType type)
         {
             // convert to string index
-            return this.settings.SymbolStates[Enum.GetName(typeof(TileType), type)];
+            return Settings.SymbolStates[Enum.GetName(typeof(TileType), type)];
         }
 
         public void ToggleSymbolVisibility(string key, bool status)
         {
-            this.settings.SymbolStates[key] = status;
+            Settings.SymbolStates[key] = status;
         }
 
         public void ToggleFilterWeapon(string weaponName, bool status)
         {
-            this.settings.ChestFilterWeaponStates[weaponName] = status;
+            Settings.ChestFilterWeaponStates[weaponName] = status;
         }
 
         public void ToggleFilterAccessories(string accessoryName, bool status)
         {
-            this.settings.ChestFilterAccessoryStates[accessoryName] = status;
+            Settings.ChestFilterAccessoryStates[accessoryName] = status;
         }
 
         public Dictionary<string, bool> FilterItemsStates
         {
             get
             {
-                return this.settings.ChestFilterWeaponStates.Concat(this.settings.ChestFilterAccessoryStates).ToDictionary(pair => pair.Key, pair => pair.Value);
+                return Settings.ChestFilterWeaponStates.Concat(Settings.ChestFilterAccessoryStates).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
         }
 
@@ -161,7 +144,7 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.ChestFilterWeaponStates;
+                return Settings.ChestFilterWeaponStates;
             }
         }
 
@@ -169,7 +152,7 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.ChestFilterAccessoryStates;
+                return Settings.ChestFilterAccessoryStates;
             }
         }
 
@@ -177,38 +160,44 @@ namespace TerrariaWorldViewer
         {
             get
             {
-                return this.settings.IsChestFilterEnabled;
+                return Settings.IsChestFilterEnabled;
             }
             set
             {
-                this.settings.IsChestFilterEnabled = value;
+                Settings.IsChestFilterEnabled = value;
             }
         }
 
         public void Initialize()
         {
             // Initialization
-            if (!System.IO.File.Exists(Constants.ApplicationUserSettingsFile))
+            if (!File.Exists(Constants.ApplicationUserSettingsFile))
             {
                 return;
             }
 
             // Load User Preference File
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(File.ReadAllText(Constants.ApplicationUserSettingsFile));
-            XmlNodeReader reader = new XmlNodeReader(xmlDoc.DocumentElement);
-            XmlSerializer inputSerializer = new XmlSerializer(this.settings.GetType());
-            this.settings = (UserSettings)inputSerializer.Deserialize(reader);
+
+            if (xmlDoc.DocumentElement == null)
+            {
+                throw new InvalidOperationException(string.Format("Document Element is Null in Settings File"));
+            }
+
+            var reader = new XmlNodeReader(xmlDoc.DocumentElement);
+            var inputSerializer = new XmlSerializer(Settings.GetType());
+            Settings = (UserSettings)inputSerializer.Deserialize(reader);
         }
 
         public void Shutdown()
         {           
             // Serialize Symbols / Etc
-            XmlSerializer outputSerializer = new XmlSerializer(this.settings.GetType());
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
-            outputSerializer.Serialize(writer, this.settings);
-            XmlDocument xmlDocument = new XmlDocument();
+            var outputSerializer = new XmlSerializer(Settings.GetType());
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
+            outputSerializer.Serialize(writer, Settings);
+            var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(sb.ToString());
             xmlDocument.Save(Constants.ApplicationUserSettingsFile);
         }

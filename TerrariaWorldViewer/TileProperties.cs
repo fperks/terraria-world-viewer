@@ -1,56 +1,40 @@
-﻿namespace TerrariaWorldViewer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Drawing;
+﻿using System.Drawing;
 
+namespace TerrariaWorldViewer
+{
     public class TileProperties
     {
-        private bool isImportant;
-        private TileType type;
-        private Color colour;
-        private bool hasSymbol;
+        private readonly bool _isImportant;
+        private readonly TileType _tileType;
+        private readonly Color _tileColor;
+        private readonly bool _hasSymbol;
 
-        public TileProperties(TileType tileType, bool isTileImportant, Color colour, bool hasSymbol = false)
+        public bool IsImportant
         {
-            this.type = tileType;
-            this.isImportant = isTileImportant;
-            this.colour = colour;
-            this.hasSymbol = hasSymbol;
-        }
-
-        public TileType TileType
-        {
-            get
-            {
-                return this.type;
-            }
-        }
-
-        public Color Colour
-        {
-            get
-            {
-                return this.colour;
-            }
+            get { return _isImportant; }
         }
 
         public bool HasSymbol
         {
-            get
-            {
-                return this.hasSymbol;
-            }
+            get { return _hasSymbol; }
         }
 
-        public bool IsImportant
+        public Color TileColor
         {
-            get
-            {
-                return this.isImportant;
-            }
+            get { return _tileColor; }
+        }
+
+        public TileType TileType
+        {
+            get { return _tileType; }
+        }
+        
+        public TileProperties(TileType tileType, bool isTileImportant, Color colour, bool hasSymbol = false)
+        {
+            _tileType = tileType;
+            _isImportant = isTileImportant;
+            _tileColor = colour;
+            _hasSymbol = hasSymbol;
         }
     }
 }

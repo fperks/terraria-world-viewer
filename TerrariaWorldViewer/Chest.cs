@@ -1,51 +1,39 @@
-﻿namespace TerrariaWorldViewer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
+namespace TerrariaWorldViewer
+{
     public class Chest
     {
-        private int chestId;
-        private Point coordinates;
-        private List<Item> items;
+        private readonly int _chestId;
+        private readonly Point _coordinates;
+        private readonly IList<Item> _items;
 
-        public Chest(int chestId, Point coordinates)
+        public int ChestId
         {
-            this.chestId = chestId;
-            this.coordinates = coordinates;
-            this.items = new List<Item>();
-        }
-
-        public void AddItem(Item item)
-        {
-            this.items.Add(item);
+            get { return _chestId; }
         }
 
         public Point Coordinates
         {
-            get
-            {
-                return this.coordinates;
-            }
+            get { return _coordinates; }
         }
 
-        public List<Item> Items
+        public IEnumerable<Item> Items
         {
-            get
-            {
-                return this.items;
-            }
+            get { return _items; }
         }
 
-        public int ChestId
+        public Chest(int chestId, Point coordinates)
         {
-            get
-            {
-                return this.chestId;
-            }
+            _chestId = chestId;
+            _coordinates = coordinates;
+            _items = new List<Item>();
+        }
+
+        public void AddItem(Item item)
+        {
+            _items.Add(item);
         }
     }
 }
